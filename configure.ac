@@ -55,6 +55,10 @@ if test x$host_alias == xpowerpc-fsl-linux
 then
 CFLAGS+=" -DPOWERPC_FSL_LINUX"
 fi
+if test x$host_alias == xaarch64-buildroot-linux-gnu
+then
+CFLAGS+=" -DAARCH64_MARVELL_LINUX"
+fi
 
 AC_MSG_NOTICE(using CFLAGS as "$CFLAGS")
 AC_MSG_NOTICE(using CXXFLAGS as "$CXXFLAGS")

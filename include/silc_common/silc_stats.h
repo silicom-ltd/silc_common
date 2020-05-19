@@ -36,7 +36,7 @@ int silc_stats_acc_node_cmp_##name_type(silc_slist_node* p_node1, silc_slist_nod
 
 #define SILC_STAT_FIELD_PRINT_FORMAT_double  "e"
 
-#define SILC_STAT_FIELD_PRINT_FORMAT_WIDTH(str,width,nametype) sprintf(str,"|%%-%u"SILC_STAT_FIELD_PRINT_FORMAT_##nametype,width)
+#define SILC_STAT_FIELD_PRINT_FORMAT_WIDTH(str,width,nametype) snprintf(str,sizeof(str),"|%%-%u"SILC_STAT_FIELD_PRINT_FORMAT_##nametype,width)
 
 #define SILC_STAT_FIELD_PRINT_FORMAT(nametype) "%"SILC_STAT_FIELD_PRINT_FORMAT_##nametype
 #define SILC_STAT_DIS_HTBL_BITS 10

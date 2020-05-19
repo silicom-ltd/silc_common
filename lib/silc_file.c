@@ -31,14 +31,14 @@ int silc_file_path_remove(const silc_cstr path)
 	}
 
 	DIR * p_dir = opendir(path);
-	struct dirent64 ent, *p_ent = &ent, *p_result;
+	struct dirent64 *p_ent;
 	while(1)
 	{
-		int ret = readdir64_r(p_dir, p_ent, &p_result);
+		p_ent = readdir64(p_dir);
+		if(p_ent == NULL)
+			break;
 		if(0 == strcmp(p_ent->d_name, ".")  || 0 == strcmp(p_ent->d_name, "..") )
 			continue;
-		if(ret != 0||p_result == NULL)
-			break;
 		if(0 != silc_file_path_remove2(path, p_ent->d_name))
 		{
 			closedir(p_dir);
@@ -269,7 +269,7 @@ int silc_file_read_all(const char* fname, char** pp_ret_data, uint32_t* p_size)
 int silc_file_dir_for_each(const silc_cstr path, silc_file_dir_for_each_cbf p_cbf, void* p_arg)
 {
 	DIR* p_dir;
-	struct dirent ent, * p_ent;
+	struct dirent * p_ent;
 	uint32_t path_len = strlen(path);
 	char buf[path_len + 512];
 
@@ -283,29 +283,25 @@ int silc_file_dir_for_each(const silc_cstr path, silc_file_dir_for_each_cbf p_cb
 
 	while(1)
 	{
-		if(0!=readdir_r(p_dir, &ent, &p_ent))
-		{
-			closedir(p_dir);
-			return -1;
-		}
+		p_ent = readdir(p_dir);
 		if(p_ent == NULL)
 		{
 			closedir(p_dir);
 			return 0;
 		}
-		if(0 == strcmp(ent.d_name, ".")||0 == strcmp(ent.d_name, ".."))
+		if(0 == strcmp(p_ent->d_name, ".")||0 == strcmp(p_ent->d_name, ".."))
 		{
 			continue;
 		}
 		strcpy(buf, path);
 		buf[path_len] = '/';
-		strcpy(buf + path_len + 1, ent.d_name);
+		strcpy(buf + path_len + 1, p_ent->d_name);
 		if(0 != silc_file_path_get_type(buf, &ftype))
 		{
 			closedir(p_dir);
 			return -1;
 		}
-		if(0 != p_cbf(path, ent.d_name, buf, ftype, p_arg))
+		if(0 != p_cbf(path, p_ent->d_name, buf, ftype, p_arg))
 		{
 			closedir(p_dir);
 			return -1;

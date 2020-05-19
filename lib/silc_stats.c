@@ -157,11 +157,11 @@ void silc_stats_acc_push_## name_type(silc_stats_acc* p_acc, uint32_t inst, uint
 void silc_stats_acc_print_result_## name_type(silc_stats_acc* p_acc,char* field_name,uint16_t prnt_width) \
 { \
 	uint32_t instance_cnt; \
-	char pnt_str[10] = {0}; \
+	char pnt_str[16] = {0}; \
 	SILC_STAT_FIELD_PRINT_FORMAT_WIDTH(pnt_str,prnt_width,string); \
-	char pnt_uint64[10] = {0}; \
+	char pnt_uint64[16] = {0}; \
 	SILC_STAT_FIELD_PRINT_FORMAT_WIDTH(pnt_uint64,prnt_width,uint64); \
-	char pnt_name_type[10] = {0}; \
+	char pnt_name_type[16] = {0}; \
 	SILC_STAT_FIELD_PRINT_FORMAT_WIDTH(pnt_name_type,prnt_width,name_type); \
 \
 	uint16_t bar_cnt = prnt_width * (p_acc->field_cnt + 3);\
@@ -282,9 +282,9 @@ void  silc_stats_acc_print_dis_comma_##name_type(silc_stats_acc_distribute* p_di
 }\
 void silc_stats_acc_print_dis_bar_##name_type(silc_stats_acc_distribute* p_dis,uint16_t prnt_width,uint16_t line_count)\
 {\
-	char fm_name[10] = {0};\
-	char fm_uint32[10] = {0};\
-	char fm_uint64[10] = {0};\
+	char fm_name[16] = {0};\
+	char fm_uint32[16] = {0};\
+	char fm_uint64[16] = {0};\
 	SILC_STAT_FIELD_PRINT_FORMAT_WIDTH(fm_name,prnt_width,name_type);\
 	SILC_STAT_FIELD_PRINT_FORMAT_WIDTH(fm_uint64,prnt_width,uint64);\
 	SILC_STAT_FIELD_PRINT_FORMAT_WIDTH(fm_uint32,prnt_width,uint32);\
@@ -418,9 +418,9 @@ static inline void  silc_stats_acc_print_dis_comma_string(silc_stats_acc_distrib
 
 static inline void silc_stats_acc_print_dis_bar_string(silc_stats_acc_distribute* p_dis,uint16_t prnt_width,uint16_t line_count)
 {
-	char fm_name[10] = {0};
-	char fm_uint32[10] = {0};
-	char fm_uint64[10] = {0};
+	char fm_name[16] = {0};
+	char fm_uint32[16] = {0};
+	char fm_uint64[16] = {0};
 	SILC_STAT_FIELD_PRINT_FORMAT_WIDTH(fm_name,prnt_width,string);
 	SILC_STAT_FIELD_PRINT_FORMAT_WIDTH(fm_uint64,prnt_width,uint64);
 	SILC_STAT_FIELD_PRINT_FORMAT_WIDTH(fm_uint32,prnt_width,uint32);

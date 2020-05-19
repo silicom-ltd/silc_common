@@ -15192,6 +15192,10 @@ if test x$host_alias == xpowerpc-fsl-linux
 then
 CFLAGS+=" -DPOWERPC_FSL_LINUX"
 fi
+if test x$host_alias == xaarch64-buildroot-linux-gnu
+then
+CFLAGS+=" -DAARCH64_MARVELL_LINUX"
+fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: using CFLAGS as \"$CFLAGS\"" >&5
 $as_echo "$as_me: using CFLAGS as \"$CFLAGS\"" >&6;}
