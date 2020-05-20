@@ -47,15 +47,19 @@ then
     LDFLAGS+=" -L$PCAPDIR -L$PCAPDIR/lib -L$PCAPDIR/lib64"
 fi
 
-if test x$host_alias == xmips64-nlm-linux
+if [[[ x$host_alias == "xmips64-"* ]]]
 then
 CFLAGS+=" -DMIPS64_NLM_LINUX"
 fi
-if test x$host_alias == xpowerpc-fsl-linux
+if [[[ x$host_alias == "xpowerpc-"* ]]]
 then
 CFLAGS+=" -DPOWERPC_FSL_LINUX"
 fi
-if test x$host_alias == xaarch64-buildroot-linux-gnu
+if [[[ x$host_alias == "xarm-"* ]]]
+then
+CFLAGS+=" -DARM_LINUX"
+fi
+if [[[ x$host_alias == "xaarch64-"* ]]]
 then
 CFLAGS+=" -DAARCH64_MARVELL_LINUX"
 fi

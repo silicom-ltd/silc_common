@@ -87,17 +87,7 @@ void silc_time_lib_init_once(void)
 	}
 }
 
-#if defined(MIPS64_NLM_LINUX)
-void silc_tsc32_read(uint32_t* tsc)
-{
-	*tsc = 0;
-}
-
-void silc_tsc64_read(uint64_t* tsc64)
-{
-	*tsc64 = 0;
-}
-#elif defined(POWERPC_FSL_LINUX) || defined(AARCH64_MARVELL_LINUX)
+#if defined(MIPS64_NLM_LINUX) || defined(POWERPC_FSL_LINUX) || defined(ARM_LINUX) || defined(AARCH64_MARVELL_LINUX)
 void silc_tsc32_read(uint32_t* tsc)
 {
 	*tsc = 0;
