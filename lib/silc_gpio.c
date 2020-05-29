@@ -36,7 +36,7 @@ error_out:
 	return chip_num;
 }
 
-int silc_gpio_get_by_name(const char*name)
+int silc_gpio_get_by_name(const char*name,char*bank_num,char*pin_num)
 {
 	struct gpiochip_info cinfo;
 	char *chrdev_name;
@@ -86,9 +86,11 @@ int silc_gpio_get_by_name(const char*name)
 			{
 				if(strcmp(linfo.name,name) == 0)
 				{
-					ret = SILC_GPIO_TO_PIN(bank,pin);
-					//fprintf(stderr,"gpio pin is %d bank is %d ,pin is %d name is %s\n",ret,bank,pin,linfo.name);
-					return ret;
+					//ret = SILC_GPIO_TO_PIN(bank,pin);
+					*bank_num = bank;
+					*pin_num = pin;
+					//fprintf(stderr,"gpio pin is %d bank is %d ,pin is %d name is %s\n",ret,*bank_num,*pin_num,linfo.name);
+					return 0;
 				}
 			}
 			else

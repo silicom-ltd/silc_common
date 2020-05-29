@@ -147,8 +147,8 @@ struct gpioevent_data {
 #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
 #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_request)
 #define GPIO_GET_LINEEVENT_IOCTL _IOWR(0xB4, 0x04, struct gpioevent_request)
-int silc_gpio_get_by_name(const char*name);
 int silc_gpio_get_chip_num(void);
+int silc_gpio_get_by_name(const char*name,char*bank_num,char*pin_num);
 #define SILC_GPIO_TO_PIN(bank, gpio) (32 * (bank) + (gpio))
 
 #ifdef __cplusplus
