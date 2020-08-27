@@ -27,6 +27,9 @@ uint64_t g_silc_time_us = 0;
 uint64_t g_silc_time_ms = 0;
 uint64_t g_silc_time_sec = 0;
 
+/*This is be used for to fix the timeout when sys time was changed*/
+uint64_t g_silc_time_fix_ms = 0;
+
 uint64_t g_silc_time_sysup_ns = 0;
 uint64_t g_silc_time_sysup_us = 0;
 uint64_t g_silc_time_sysup_ms = 0;
@@ -37,11 +40,21 @@ pthread_t g_silc_time_thread;
 void silc_time_update()
 {
 	struct timeval tv;
+	uint64_t pre_time_ms;
+	pre_time_ms = g_silc_time_ms;
 	gettimeofday(&tv, NULL);
 	g_silc_time_sec = tv.tv_sec;
 	g_silc_time_us = g_silc_time_sec* 1000000ULL + tv.tv_usec;
 	g_silc_time_ns = g_silc_time_us* 1000;
 	g_silc_time_ms = g_silc_time_us/ 1000;
+	g_silc_time_fix_ms = g_silc_time_ms - pre_time_ms;
+	/* When the diff of time is more than 1000 ms,we judge that the sys time has been changed
+	 * We need to calculate the offset of the time for user.
+	 * */
+	if(g_silc_time_fix_ms < 1000)
+	{
+		g_silc_time_fix_ms = 0;
+	}
 }
 
 
@@ -51,7 +64,7 @@ void* silc_time_loop(void* arg)
 	while(g_silc_time_loop_enable)
 	{
 		silc_time_update();
-		//sleep 500 us
+		//sleep 500 ms
 		silc_sem_wait(&g_silc_time_sleep_sem, 500000);
 	}
 	return NULL;

@@ -39,6 +39,7 @@ extern uint64_t g_silc_time_ns;
 extern uint64_t g_silc_time_us;
 extern uint64_t g_silc_time_ms;
 extern uint64_t g_silc_time_sec;
+extern uint64_t g_silc_time_fix_ms;
 
 extern uint64_t g_silc_time_sysup_ns;
 extern uint64_t g_silc_time_sysup_us;
@@ -61,6 +62,11 @@ static inline uint64_t silc_time_get_ms(void)
 {
 	return g_silc_time_ms;
 }
+static inline uint64_t silc_time_get_fix_ms(void)
+{
+	return g_silc_time_fix_ms;
+}
+
 
 static inline uint64_t silc_time_get_sysup_ms()
 {
