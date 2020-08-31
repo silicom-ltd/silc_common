@@ -6,7 +6,7 @@
  *   Copyright: NetPerform Technology
  */
 #include "silc_common.h"
-
+#define SILC_TIME_UPDATE_PERIOD_US 10000
 void silc_time_sleep(uint32_t sec, uint32_t nanosec)
 {
 	struct timespec ts;
@@ -28,8 +28,6 @@ uint64_t g_silc_time_ms = 0;
 uint64_t g_silc_time_sec = 0;
 
 /*This is be used for to fix the timeout when sys time was changed*/
-uint64_t g_silc_time_fix_ms = 0;
-
 uint64_t g_silc_time_sysup_ns = 0;
 uint64_t g_silc_time_sysup_us = 0;
 uint64_t g_silc_time_sysup_ms = 0;
@@ -37,24 +35,41 @@ uint64_t g_silc_time_sysup_sec = 0;
 silc_sem g_silc_time_sleep_sem;
 pthread_t g_silc_time_thread;
 
+uint64_t g_silc_time_sys_us = 0;
 void silc_time_update()
 {
 	struct timeval tv;
-	uint64_t pre_time_ms;
-	pre_time_ms = g_silc_time_ms;
+	uint64_t pre_time_us;
+	uint64_t diff_time_us;
+	pre_time_us = g_silc_time_us;
 	gettimeofday(&tv, NULL);
 	g_silc_time_sec = tv.tv_sec;
 	g_silc_time_us = g_silc_time_sec* 1000000ULL + tv.tv_usec;
 	g_silc_time_ns = g_silc_time_us* 1000;
 	g_silc_time_ms = g_silc_time_us/ 1000;
-	g_silc_time_fix_ms = g_silc_time_ms - pre_time_ms;
-	/* When the diff of time is more than 1000 ms,we judge that the sys time has been changed
+	if(g_silc_time_us > pre_time_us)
+	{
+		/*The time was set forward*/
+		diff_time_us = g_silc_time_us - pre_time_us;
+	}
+	else
+	{
+		diff_time_us = pre_time_us - g_silc_time_us;
+	}
+
+	/* When the diff of time is more than 500 ms,we judge that the sys time has been changed
 	 * We need to calculate the offset of the time for user.
 	 * */
-	if(g_silc_time_fix_ms < 1000)
+	if(diff_time_us > 500000)
 	{
-		g_silc_time_fix_ms = 0;
+		g_silc_time_sys_us = g_silc_time_sys_us + SILC_TIME_UPDATE_PERIOD_US;
+
 	}
+	else
+	{
+		g_silc_time_sys_us = g_silc_time_sys_us + diff_time_us;
+	}
+
 }
 
 
@@ -64,8 +79,8 @@ void* silc_time_loop(void* arg)
 	while(g_silc_time_loop_enable)
 	{
 		silc_time_update();
-		//sleep 500 ms
-		silc_sem_wait(&g_silc_time_sleep_sem, 500000);
+		//sleep 10ms
+		silc_sem_wait(&g_silc_time_sleep_sem, SILC_TIME_UPDATE_PERIOD_US);
 	}
 	return NULL;
 }
@@ -85,7 +100,7 @@ void silc_time_lib_init_once(void)
 	g_silc_time_sysup_us = g_silc_time_us;
 	g_silc_time_sysup_ms = g_silc_time_ms;
 	g_silc_time_sysup_sec = g_silc_time_sec;
-
+	g_silc_time_sys_us = g_silc_time_us;
 	silc_sem_init(&g_silc_time_sleep_sem);
 
 //	if(0!=pthread_create(&t, &attr, silc_time_loop, NULL))
