@@ -364,7 +364,7 @@ static inline char* silc_mprintf(const char *fmt, ...)
 	prn_size = vsnprintf(tmp_str, 2, fmt, ap);
 	if(prn_size >=0)
 	{
-		ret = malloc(prn_size + 8);
+		ret = (char*)malloc(prn_size + 8);
 	}
 	if(ret)
 	{
